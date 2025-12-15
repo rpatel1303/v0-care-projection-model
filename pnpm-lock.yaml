@@ -181,8 +181,8 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
       typescript:
-        specifier: 5.0.0-dev.20221101
-        version: 5.0.0-dev.20221101
+        specifier: ^5.6.3
+        version: 5.6.3
 
 packages:
 
@@ -1688,9 +1688,9 @@ packages:
   tw-animate-css@1.3.3:
     resolution: {integrity: sha512-tXE2TRWrskc4TU3RDd7T8n8Np/wCfoeH9gz22c7PzYqNPQ9FBGFbWWzwL0JyHcFp+jHozmF76tbHfPAx22ua2Q==}
 
-  typescript@5.0.0-dev.20221101:
-    resolution: {integrity: sha512-toPkTrYmviWyzo9Vj/fEG0iWkVTo6wB5HHaZu8eV070sOA8yON5vKKsROt0AyeveDhSfzPX8MXEc5oiNeDCGeA==}
-    engines: {node: '>=4.2.0'}
+  typescript@5.6.3:
+    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
+    engines: {node: '>=14.17'}
     hasBin: true
 
   undici-types@6.11.1:
@@ -3165,7 +3165,7 @@ snapshots:
 
   tw-animate-css@1.3.3: {}
 
-  typescript@5.0.0-dev.20221101: {}
+  typescript@5.6.3: {}
 
   undici-types@6.11.1: {}
 
