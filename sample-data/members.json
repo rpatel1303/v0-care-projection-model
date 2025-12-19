@@ -1,0 +1,422 @@
+[
+  {
+    "member_id": "M00001",
+    "first_name": "John",
+    "last_name": "Smith",
+    "date_of_birth": "1958-03-15",
+    "gender": "M",
+    "address": {
+      "street": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "zip_code": "10001"
+    },
+    "phone": "(212) 555-0101",
+    "email": "john.smith@email.com",
+    "plan_type": "PPO",
+    "network": "Northeast Network",
+    "geographic_region": "New York",
+    "enrollment_date": "2023-01-01",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "1234567890",
+      "name": "Dr. Sarah Johnson",
+      "specialty": "Family Medicine"
+    },
+    "risk_score": 7.2,
+    "hcc_score": 2.3,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.11",
+        "description": "Unilateral primary osteoarthritis, right knee",
+        "diagnosis_date": "2023-06-15"
+      },
+      {
+        "icd10_code": "E11.9",
+        "description": "Type 2 diabetes mellitus without complications",
+        "diagnosis_date": "2020-03-10"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00002",
+    "first_name": "Maria",
+    "last_name": "Garcia",
+    "date_of_birth": "1965-07-22",
+    "gender": "F",
+    "address": {
+      "street": "456 Oak Avenue",
+      "city": "Newark",
+      "state": "NJ",
+      "zip_code": "07102"
+    },
+    "phone": "(973) 555-0202",
+    "email": "maria.garcia@email.com",
+    "plan_type": "HMO",
+    "network": "Metro Network",
+    "geographic_region": "New Jersey",
+    "enrollment_date": "2022-06-15",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "2345678901",
+      "name": "Dr. Michael Chen",
+      "specialty": "Internal Medicine"
+    },
+    "risk_score": 8.5,
+    "hcc_score": 3.1,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.0",
+        "description": "Bilateral primary osteoarthritis of knee",
+        "diagnosis_date": "2023-08-20"
+      },
+      {
+        "icd10_code": "I10",
+        "description": "Essential (primary) hypertension",
+        "diagnosis_date": "2018-05-12"
+      },
+      {
+        "icd10_code": "E78.5",
+        "description": "Hyperlipidemia, unspecified",
+        "diagnosis_date": "2019-09-03"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00003",
+    "first_name": "Robert",
+    "last_name": "Johnson",
+    "date_of_birth": "1962-11-08",
+    "gender": "M",
+    "address": {
+      "street": "789 Elm Street",
+      "city": "Stamford",
+      "state": "CT",
+      "zip_code": "06901"
+    },
+    "phone": "(203) 555-0303",
+    "email": "robert.johnson@email.com",
+    "plan_type": "PPO",
+    "network": "Regional Network",
+    "geographic_region": "Connecticut",
+    "enrollment_date": "2023-03-20",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "3456789012",
+      "name": "Dr. Emily Rodriguez",
+      "specialty": "Family Medicine"
+    },
+    "risk_score": 6.8,
+    "hcc_score": 2.0,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.12",
+        "description": "Unilateral primary osteoarthritis, left knee",
+        "diagnosis_date": "2023-09-10"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00004",
+    "first_name": "Jennifer",
+    "last_name": "Lee",
+    "date_of_birth": "1970-05-14",
+    "gender": "F",
+    "address": {
+      "street": "321 Pine Road",
+      "city": "Queens",
+      "state": "NY",
+      "zip_code": "11375"
+    },
+    "phone": "(718) 555-0404",
+    "email": "jennifer.lee@email.com",
+    "plan_type": "EPO",
+    "network": "Northeast Network",
+    "geographic_region": "New York",
+    "enrollment_date": "2023-09-01",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "4567890123",
+      "name": "Dr. David Kim",
+      "specialty": "Internal Medicine"
+    },
+    "risk_score": 7.9,
+    "hcc_score": 2.7,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.11",
+        "description": "Unilateral primary osteoarthritis, right knee",
+        "diagnosis_date": "2023-10-05"
+      },
+      {
+        "icd10_code": "E66.9",
+        "description": "Obesity, unspecified",
+        "diagnosis_date": "2021-02-18"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00005",
+    "first_name": "William",
+    "last_name": "Brown",
+    "date_of_birth": "1960-09-30",
+    "gender": "M",
+    "address": {
+      "street": "654 Maple Drive",
+      "city": "Jersey City",
+      "state": "NJ",
+      "zip_code": "07302"
+    },
+    "phone": "(201) 555-0505",
+    "email": "william.brown@email.com",
+    "plan_type": "HMO",
+    "network": "Metro Network",
+    "geographic_region": "New Jersey",
+    "enrollment_date": "2022-11-10",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "5678901234",
+      "name": "Dr. Lisa Patel",
+      "specialty": "Family Medicine"
+    },
+    "risk_score": 8.1,
+    "hcc_score": 2.9,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.0",
+        "description": "Bilateral primary osteoarthritis of knee",
+        "diagnosis_date": "2023-11-12"
+      },
+      {
+        "icd10_code": "E11.9",
+        "description": "Type 2 diabetes mellitus without complications",
+        "diagnosis_date": "2019-07-22"
+      },
+      {
+        "icd10_code": "I10",
+        "description": "Essential (primary) hypertension",
+        "diagnosis_date": "2017-04-15"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00006",
+    "first_name": "Patricia",
+    "last_name": "Martinez",
+    "date_of_birth": "1968-12-03",
+    "gender": "F",
+    "address": {
+      "street": "987 Cedar Lane",
+      "city": "Bridgeport",
+      "state": "CT",
+      "zip_code": "06604"
+    },
+    "phone": "(203) 555-0606",
+    "email": "patricia.martinez@email.com",
+    "plan_type": "PPO",
+    "network": "Regional Network",
+    "geographic_region": "Connecticut",
+    "enrollment_date": "2023-04-15",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "6789012345",
+      "name": "Dr. James Wilson",
+      "specialty": "Internal Medicine"
+    },
+    "risk_score": 7.5,
+    "hcc_score": 2.4,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.12",
+        "description": "Unilateral primary osteoarthritis, left knee",
+        "diagnosis_date": "2023-11-28"
+      },
+      {
+        "icd10_code": "E78.5",
+        "description": "Hyperlipidemia, unspecified",
+        "diagnosis_date": "2020-08-14"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00007",
+    "first_name": "Michael",
+    "last_name": "Davis",
+    "date_of_birth": "1955-04-18",
+    "gender": "M",
+    "address": {
+      "street": "147 Birch Avenue",
+      "city": "Yonkers",
+      "state": "NY",
+      "zip_code": "10701"
+    },
+    "phone": "(914) 555-0707",
+    "email": "michael.davis@email.com",
+    "plan_type": "HMO",
+    "network": "Northeast Network",
+    "geographic_region": "New York",
+    "enrollment_date": "2021-01-01",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "7890123456",
+      "name": "Dr. Amanda Thompson",
+      "specialty": "Family Medicine"
+    },
+    "risk_score": 5.2,
+    "hcc_score": 1.5,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.11",
+        "description": "Unilateral primary osteoarthritis, right knee",
+        "diagnosis_date": "2022-03-10"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00008",
+    "first_name": "Linda",
+    "last_name": "Wilson",
+    "date_of_birth": "1957-08-25",
+    "gender": "F",
+    "address": {
+      "street": "258 Walnut Street",
+      "city": "Paterson",
+      "state": "NJ",
+      "zip_code": "07501"
+    },
+    "phone": "(973) 555-0808",
+    "email": "linda.wilson@email.com",
+    "plan_type": "PPO",
+    "network": "Metro Network",
+    "geographic_region": "New Jersey",
+    "enrollment_date": "2020-07-15",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "8901234567",
+      "name": "Dr. Robert Garcia",
+      "specialty": "Internal Medicine"
+    },
+    "risk_score": 6.0,
+    "hcc_score": 1.8,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.12",
+        "description": "Unilateral primary osteoarthritis, left knee",
+        "diagnosis_date": "2021-11-05"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00009",
+    "first_name": "David",
+    "last_name": "Anderson",
+    "date_of_birth": "1963-02-11",
+    "gender": "M",
+    "address": {
+      "street": "369 Spruce Court",
+      "city": "New Haven",
+      "state": "CT",
+      "zip_code": "06510"
+    },
+    "phone": "(203) 555-0909",
+    "email": "david.anderson@email.com",
+    "plan_type": "EPO",
+    "network": "Regional Network",
+    "geographic_region": "Connecticut",
+    "enrollment_date": "2023-05-20",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "9012345678",
+      "name": "Dr. Susan Martinez",
+      "specialty": "Family Medicine"
+    },
+    "risk_score": 7.0,
+    "hcc_score": 2.2,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.0",
+        "description": "Bilateral primary osteoarthritis of knee",
+        "diagnosis_date": "2023-09-18"
+      },
+      {
+        "icd10_code": "I10",
+        "description": "Essential (primary) hypertension",
+        "diagnosis_date": "2018-12-07"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  },
+  {
+    "member_id": "M00010",
+    "first_name": "Barbara",
+    "last_name": "Taylor",
+    "date_of_birth": "1966-10-19",
+    "gender": "F",
+    "address": {
+      "street": "741 Hickory Place",
+      "city": "Brooklyn",
+      "state": "NY",
+      "zip_code": "11201"
+    },
+    "phone": "(718) 555-1010",
+    "email": "barbara.taylor@email.com",
+    "plan_type": "HMO",
+    "network": "Northeast Network",
+    "geographic_region": "New York",
+    "enrollment_date": "2022-08-10",
+    "enrollment_status": "active",
+    "termination_date": null,
+    "primary_care_provider": {
+      "npi": "0123456789",
+      "name": "Dr. Christopher Lee",
+      "specialty": "Internal Medicine"
+    },
+    "risk_score": 7.7,
+    "hcc_score": 2.6,
+    "chronic_conditions": [
+      {
+        "icd10_code": "M17.11",
+        "description": "Unilateral primary osteoarthritis, right knee",
+        "diagnosis_date": "2023-10-22"
+      },
+      {
+        "icd10_code": "E11.9",
+        "description": "Type 2 diabetes mellitus without complications",
+        "diagnosis_date": "2020-06-15"
+      },
+      {
+        "icd10_code": "E78.5",
+        "description": "Hyperlipidemia, unspecified",
+        "diagnosis_date": "2021-03-28"
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-15T10:30:00Z"
+  }
+]

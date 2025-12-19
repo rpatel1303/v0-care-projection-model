@@ -29,13 +29,13 @@ interface Member {
   daysUntilProcedure: number
 }
 
-export function HighRiskMembers() {
+export function HighRiskMembers({ episodeId }: { episodeId: string }) {
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedMember, setExpandedMember] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch("/api/dashboard/members")
+    fetch(`/api/dashboard/members?episodeId=${episodeId}`)
       .then((res) => res.json())
       .then((data) => {
         setMembers(data)
@@ -45,13 +45,13 @@ export function HighRiskMembers() {
         console.error("[v0] Failed to fetch high-risk members:", err)
         setLoading(false)
       })
-  }, [])
+  }, [episodeId])
 
   if (loading) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>High-Probability Knee Replacement Candidates</CardTitle>
+          <CardTitle>High-Probability Candidates</CardTitle>
           <CardDescription>Loading member data...</CardDescription>
         </CardHeader>
         <CardContent>
@@ -68,7 +68,7 @@ export function HighRiskMembers() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>High-Probability Knee Replacement Candidates</CardTitle>
+        <CardTitle>High-Probability Candidates</CardTitle>
         <CardDescription>
           {members.length} members with strongest intent signals (from prediction_result + clinical_intent_event)
         </CardDescription>

@@ -3,41 +3,41 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
-export function SignalTimeline() {
+export function SignalTimeline({ episodeId }: { episodeId: string }) {
   const timelineEvents = [
     {
       date: "Oct 15, 2024",
       member: "M000847 - Sarah Johnson",
       signal: "Eligibility Query",
-      details: "Provider checked coverage for orthopedic consultation",
+      details: "Provider checked coverage for procedure consultation",
       weight: 0.4,
     },
     {
       date: "Oct 22, 2024",
       member: "M000847 - Sarah Johnson",
       signal: "Referral Created",
-      details: "PCP referred to Dr. Anderson (Orthopedic Surgery)",
+      details: "PCP referred to specialist for evaluation",
       weight: 0.7,
     },
     {
       date: "Oct 28, 2024",
       member: "M000847 - Sarah Johnson",
-      signal: "MRI Prior Auth",
-      details: "PA request approved for knee MRI imaging",
+      signal: "Imaging Prior Auth",
+      details: "PA request approved for diagnostic imaging",
       weight: 0.6,
     },
     {
       date: "Nov 5, 2024",
       member: "M000847 - Sarah Johnson",
       signal: "Rx Benefit Check",
-      details: "Pharmacy benefit verification for pain management",
+      details: "Pharmacy benefit verification for medication",
       weight: 0.3,
     },
     {
       date: "Nov 10, 2024",
       member: "M000847 - Sarah Johnson",
-      signal: "TKA Prior Auth",
-      details: "PA submitted for total knee arthroplasty (CPT 27447)",
+      signal: "Procedure Prior Auth",
+      details: "PA submitted for scheduled procedure",
       weight: 0.9,
     },
   ]
@@ -74,7 +74,7 @@ export function SignalTimeline() {
         <div className="mt-6 rounded-lg border border-primary/20 bg-primary/5 p-4">
           <p className="text-sm text-foreground">
             <span className="font-medium">Prediction:</span> Based on signal accumulation (cumulative weight: 2.9),
-            member has 89% probability of TKA procedure within 30-45 days. Recommended actions: care navigation, prehab
+            member has 89% probability of procedure within 30-45 days. Recommended actions: care navigation, prehab
             enrollment, site-of-care optimization.
           </p>
         </div>

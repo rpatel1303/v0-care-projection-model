@@ -10,12 +10,12 @@ interface SignalData {
   timeline: Array<{ week: string; elig: number; pa: number; referral: number }>
 }
 
-export function IntentSignalsOverview() {
+export function IntentSignalsOverview({ episodeId }: { episodeId: string }) {
   const [signals, setSignals] = useState<SignalData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch("/api/dashboard/signals")
+    fetch(`/api/dashboard/signals?episodeId=${episodeId}`)
       .then((res) => res.json())
       .then((data) => {
         setSignals(data)
@@ -25,14 +25,14 @@ export function IntentSignalsOverview() {
         console.error("[v0] Failed to fetch signal data:", err)
         setLoading(false)
       })
-  }, [])
+  }, [episodeId])
 
   return (
     <Card className="mt-6">
       <CardHeader>
         <CardTitle>Intent Signal Architecture</CardTitle>
         <CardDescription>
-          Pre-claim signals from clinical_intent_event table used to predict upcoming TKA procedures
+          Pre-claim signals from clinical_intent_event table used to predict upcoming procedures
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -54,7 +54,7 @@ export function IntentSignalsOverview() {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Member or provider checking coverage for orthopedic/knee services via EDI gateway
+                  Member or provider checking coverage for procedure services via EDI gateway
                 </p>
                 <div className="text-sm">
                   <span className="font-medium">{signals.byType[1]?.count.toLocaleString()}</span>
@@ -81,7 +81,7 @@ export function IntentSignalsOverview() {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Direct PA request for TKA procedure with CPT 27447 code from UM system
+                  Direct PA request for procedure with specific CPT codes from UM system
                 </p>
                 <div className="text-sm">
                   <span className="font-medium">{signals.byType[0]?.count.toLocaleString()}</span>

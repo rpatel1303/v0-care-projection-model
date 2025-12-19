@@ -6,7 +6,7 @@ import { CheckCircle, ArrowRight } from "lucide-react"
 import { HighRiskMembers } from "@/components/high-risk-members"
 import { SignalTimeline } from "@/components/signal-timeline"
 
-export function ClinicalOpsDashboard() {
+export function ClinicalOpsDashboard({ episodeId }: { episodeId: string }) {
   return (
     <div className="space-y-6">
       {/* Clinical Action Cards */}
@@ -55,10 +55,10 @@ export function ClinicalOpsDashboard() {
       </div>
 
       {/* High Risk Members Table */}
-      <HighRiskMembers />
+      <HighRiskMembers episodeId={episodeId} />
 
       {/* Signal Timeline */}
-      <SignalTimeline />
+      <SignalTimeline episodeId={episodeId} />
     </div>
   )
 }

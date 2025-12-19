@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Member Demographics Schema",
+  "description": "Schema for member demographic data from proprietary enrollment systems",
+  "type": "object",
+  "required": [
+    "member_id",
+    "first_name",
+    "last_name",
+    "date_of_birth",
+    "gender",
+    "plan_type",
+    "network",
+    "enrollment_status"
+  ],
+  "properties": {
+    "member_id": {
+      "type": "string",
+      "description": "Unique member identifier from enrollment system",
+      "pattern": "^M[0-9]{5}$",
+      "examples": ["M00001", "M00123"]
+    },
+    "first_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "Member's first name"
+    },
+    "last_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "Member's last name"
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "Member's date of birth in YYYY-MM-DD format",
+      "examples": ["1958-03-15", "1975-08-22"]
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["M", "F", "U"],
+      "description": "Member's gender: M=Male, F=Female, U=Unknown"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "state": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "Two-letter state code"
+        },
+        "zip_code": {
+          "type": "string",
+          "pattern": "^[0-9]{5}(-[0-9]{4})?$",
+          "description": "5-digit or 9-digit ZIP code"
+        }
+      }
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number in format (555) 123-4567"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Member's email address"
+    },
+    "plan_type": {
+      "type": "string",
+      "enum": ["HMO", "PPO", "EPO", "POS"],
+      "description": "Health plan type"
+    },
+    "network": {
+      "type": "string",
+      "description": "Provider network assignment",
+      "examples": ["Northeast Network", "Metro Network", "Regional Network"]
+    },
+    "geographic_region": {
+      "type": "string",
+      "description": "Geographic service region",
+      "examples": ["New York", "New Jersey", "Connecticut"]
+    },
+    "enrollment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date member enrolled in plan"
+    },
+    "enrollment_status": {
+      "type": "string",
+      "enum": ["active", "termed", "suspended"],
+      "description": "Current enrollment status"
+    },
+    "termination_date": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Date membership terminated (if applicable)"
+    },
+    "primary_care_provider": {
+      "type": "object",
+      "properties": {
+        "npi": {
+          "type": "string",
+          "pattern": "^[0-9]{10}$",
+          "description": "10-digit National Provider Identifier"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "specialty": {
+          "type": "string",
+          "maxLength": 50
+        }
+      }
+    },
+    "risk_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Overall clinical risk score (0-10)"
+    },
+    "hcc_score": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Hierarchical Condition Category (HCC) risk score"
+    },
+    "chronic_conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "icd10_code": {
+            "type": "string",
+            "pattern": "^[A-Z][0-9]{2}(\\.[0-9]{1,4})?$"
+          },
+          "description": {
+            "type": "string"
+          },
+          "diagnosis_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "description": "List of chronic conditions"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when record was created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when record was last updated"
+    }
+  }
+}

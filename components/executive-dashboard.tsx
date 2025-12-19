@@ -39,7 +39,11 @@ interface DashboardSummary {
   }
 }
 
-export function ExecutiveDashboard() {
+interface ExecutiveDashboardProps {
+  episodeId: string
+}
+
+export function ExecutiveDashboard({ episodeId }: ExecutiveDashboardProps) {
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -50,6 +54,7 @@ export function ExecutiveDashboard() {
 
   useEffect(() => {
     const params = new URLSearchParams({
+      episodeId,
       timeHorizon,
       region,
       network,
@@ -66,7 +71,7 @@ export function ExecutiveDashboard() {
         console.error("[v0] Failed to fetch dashboard summary:", err)
         setLoading(false)
       })
-  }, [timeHorizon, region, network, planType])
+  }, [episodeId, timeHorizon, region, network, planType])
 
   if (loading || !summary) {
     return (
@@ -97,13 +102,27 @@ export function ExecutiveDashboard() {
 
   const metrics = getMetrics()
 
+  const getEpisodeName = () => {
+    const episodeNames: Record<string, string> = {
+      TKA: "Knee Replacement",
+      THA: "Hip Replacement",
+      SPINE_FUSION: "Spinal Fusion",
+      CABG: "Coronary Artery Bypass Graft",
+      PCI: "Coronary Intervention",
+      BARIATRIC: "Bariatric Surgery",
+      COLORECTAL: "Colorectal Surgery",
+      MASTECTOMY: "Mastectomy",
+    }
+    return episodeNames[episodeId] || "Episode"
+  }
+
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg">Knee Replacement Forecasting</CardTitle>
+              <CardTitle className="text-lg">{getEpisodeName()} Forecasting</CardTitle>
               <CardDescription>Clinical utilization prediction based on pre-claim intent signals</CardDescription>
             </div>
             <Badge variant="outline" className="gap-1">
@@ -276,7 +295,8 @@ export function ExecutiveDashboard() {
         <CardHeader>
           <CardTitle>High-Risk Member Summary</CardTitle>
           <CardDescription>
-            Members with very high probability (90%+) of knee replacement procedure in next {timeHorizon} days
+            Members with very high probability (90%+) of {getEpisodeName().toLowerCase()} procedure in next{" "}
+            {timeHorizon} days
           </CardDescription>
         </CardHeader>
         <CardContent>
