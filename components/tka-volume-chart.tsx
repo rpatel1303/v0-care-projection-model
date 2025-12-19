@@ -24,6 +24,7 @@ interface ForecastData {
 }
 
 interface TKAVolumeChartProps {
+  episodeId: string
   filters: {
     region: string
     network: string
@@ -31,12 +32,12 @@ interface TKAVolumeChartProps {
   }
 }
 
-export function TKAVolumeChart({ filters }: TKAVolumeChartProps) {
+export function TKAVolumeChart({ episodeId, filters }: TKAVolumeChartProps) {
   const [data, setData] = useState<ForecastData[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const params = new URLSearchParams(filters)
+    const params = new URLSearchParams({ ...filters, episodeId })
     fetch(`/api/dashboard/forecast?${params}`)
       .then((res) => res.json())
       .then((forecast: ForecastData[]) => {
@@ -55,13 +56,27 @@ export function TKAVolumeChart({ filters }: TKAVolumeChartProps) {
         console.error("[v0] Failed to fetch forecast data:", err)
         setLoading(false)
       })
-  }, [filters])
+  }, [filters, episodeId])
+
+  const getEpisodeName = (episodeId: string): string => {
+    const episodeNames: Record<string, string> = {
+      TKA: "Knee Replacement",
+      THA: "Hip Replacement",
+      SPINAL_FUSION: "Spinal Fusion",
+      CABG: "Coronary Artery Bypass Graft",
+      PCI: "Coronary Intervention",
+      BARIATRIC: "Bariatric Surgery",
+      COLORECTAL: "Colorectal Surgery",
+      MASTECTOMY: "Mastectomy",
+    }
+    return episodeNames[episodeId] || "Episode"
+  }
 
   if (loading) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Knee Replacement Volume Forecast</CardTitle>
+          <CardTitle>{getEpisodeName(episodeId)} Volume Forecast</CardTitle>
           <CardDescription>Loading forecast data...</CardDescription>
         </CardHeader>
         <CardContent>
@@ -74,7 +89,7 @@ export function TKAVolumeChart({ filters }: TKAVolumeChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Knee Replacement Volume Forecast</CardTitle>
+        <CardTitle>{getEpisodeName(episodeId)} Volume Forecast</CardTitle>
         <CardDescription>
           Historical claims (claim_line + clinical_outcome_event) vs predicted volume (prediction_result)
         </CardDescription>
@@ -121,29 +136,29 @@ export function TKAVolumeChart({ filters }: TKAVolumeChartProps) {
               stackId="1"
             />
 
-            {/* Actual claims bars */}
-            <Bar dataKey="actual" fill="hsl(var(--chart-2))" name="Actual Claims" radius={[4, 4, 0, 0]} />
+            {/* Actual claims bars - historical data */}
+            <Bar dataKey="actual" fill="#4E8416" name="Actual Claims" radius={[4, 4, 0, 0]} />
 
-            {/* Predicted volume area */}
+            {/* Predicted volume area - forecasted data */}
             <Area
               type="monotone"
               dataKey="predicted"
-              stroke="hsl(var(--chart-1))"
+              stroke="#003D58"
               strokeWidth={3}
-              fill="hsl(var(--chart-1))"
+              fill="#003D58"
               fillOpacity={0.2}
               name="Predicted Volume"
-              dot={{ r: 5, fill: "hsl(var(--chart-1))" }}
+              dot={{ r: 5, fill: "#003D58" }}
             />
           </ComposedChart>
         </ResponsiveContainer>
         <div className="mt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded bg-[hsl(var(--chart-2))]" />
+            <div className="h-3 w-3 rounded bg-[#4E8416]" />
             <span>Actual (from claims)</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded bg-[hsl(var(--chart-1))]" />
+            <div className="h-3 w-3 rounded bg-[#003D58]" />
             <span>Predicted (from intent signals)</span>
           </div>
           <div className="flex items-center gap-2">

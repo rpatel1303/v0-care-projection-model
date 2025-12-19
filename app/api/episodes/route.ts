@@ -20,7 +20,7 @@ export async function GET() {
       color: "#8b5cf6",
     },
     {
-      id: "SPINE_FUSION",
+      id: "SPINAL_FUSION",
       name: "Spinal Fusion",
       category: "Orthopedic",
       avgCost: 65000,

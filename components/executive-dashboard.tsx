@@ -64,16 +64,23 @@ export function ExecutiveDashboard({ episodeId }: ExecutiveDashboardProps) {
     fetch(`/api/dashboard/summary?${params}`)
       .then((res) => res.json())
       .then((data) => {
-        setSummary(data)
+        if (data.error || !data.predictedVolume) {
+          console.error("[v0] Invalid summary data received:", data)
+          // Fall back to empty state
+          setSummary(null)
+        } else {
+          setSummary(data)
+        }
         setLoading(false)
       })
       .catch((err) => {
         console.error("[v0] Failed to fetch dashboard summary:", err)
+        setSummary(null)
         setLoading(false)
       })
   }, [episodeId, timeHorizon, region, network, planType])
 
-  if (loading || !summary) {
+  if (loading) {
     return (
       <div className="space-y-6">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -92,6 +99,35 @@ export function ExecutiveDashboard({ episodeId }: ExecutiveDashboardProps) {
     )
   }
 
+  if (!summary) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Unable to Load Dashboard</CardTitle>
+            <CardDescription>
+              There was an error loading dashboard data. Please check that Supabase is properly configured and the
+              database has been seeded.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground">
+              <p>Troubleshooting steps:</p>
+              <ul className="mt-2 list-disc list-inside space-y-1">
+                <li>Verify Supabase environment variables are set</li>
+                <li>
+                  Run SQL scripts in order: 00-consolidated-schema.sql → 02-seed-episode-definitions.sql →
+                  03-seed-code-mappings.sql
+                </li>
+                <li>Check browser console and server logs for specific errors</li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   const getMetrics = () => {
     const key = `next${timeHorizon}Days` as keyof typeof summary.predictedVolume
     return {
@@ -106,7 +142,7 @@ export function ExecutiveDashboard({ episodeId }: ExecutiveDashboardProps) {
     const episodeNames: Record<string, string> = {
       TKA: "Knee Replacement",
       THA: "Hip Replacement",
-      SPINE_FUSION: "Spinal Fusion",
+      SPINAL_FUSION: "Spinal Fusion",
       CABG: "Coronary Artery Bypass Graft",
       PCI: "Coronary Intervention",
       BARIATRIC: "Bariatric Surgery",
@@ -286,8 +322,8 @@ export function ExecutiveDashboard({ episodeId }: ExecutiveDashboardProps) {
 
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <TKAVolumeChart filters={{ region, network, planType }} />
-        <CostProjectionChart filters={{ region, network, planType }} />
+        <TKAVolumeChart episodeId={episodeId} filters={{ region, network, planType }} />
+        <CostProjectionChart episodeId={episodeId} filters={{ region, network, planType }} />
       </div>
 
       {/* High Risk Members Summary */}

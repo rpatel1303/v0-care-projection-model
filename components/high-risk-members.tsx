@@ -65,6 +65,31 @@ export function HighRiskMembers({ episodeId }: { episodeId: string }) {
     )
   }
 
+  if (members.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>High-Probability Candidates</CardTitle>
+          <CardDescription>No high-probability candidates found for this episode</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-lg border border-dashed border-border p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              There are currently no members with high probability scores for this episode type.
+              <br />
+              This could mean:
+            </p>
+            <ul className="mt-4 space-y-2 text-left text-sm text-muted-foreground">
+              <li>• No prediction data has been loaded for this episode yet</li>
+              <li>• No members currently show strong intent signals for this procedure</li>
+              <li>• The episode definition may need additional code mappings</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>

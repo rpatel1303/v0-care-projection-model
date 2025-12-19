@@ -4,53 +4,67 @@ Database schema and seed data scripts for the Clinical Forecasting Engine.
 
 ## Execution Order
 
-Run these scripts in order to set up your database:
+**IMPORTANT: Run scripts in this exact order:**
 
-### 1. Create Tables
+### Step 1: Create All Tables and Functions
 ```bash
-psql -d clinical_forecasting -f 01-create-tables-multi-episode.sql
+# In Supabase SQL Editor or psql:
+psql -d your_database -f 00-consolidated-schema.sql
 ```
 
-Creates all base tables:
-- `member` - Member demographics
-- `eligibility_inquiry_event` - 270/271 EDI transactions
-- `prior_auth_request` - 278 prior authorization data  
-- `claim_header` & `claim_line` - 837 claims data
-- `clinical_intent_event` - Unified intent signals
-- `clinical_outcome_event` - Ground truth outcomes
-- `episode_definition` - Episode of care definitions
-- `procedure_code_map` & `diagnosis_code_map` - Code mappings
-- `prediction_result` - ML model predictions
+This single script creates:
+- All 12 tables with correct column names
+- All indexes (without IMMUTABLE function issues)
+- All EDI loader functions
+- Intent/outcome event generator functions
+- New episode_code_mapping table for database-driven rules
 
-### 2. Seed Episode Definitions
+### Step 2: Seed Episode Definitions
 ```bash
-psql -d clinical_forecasting -f 02-seed-episode-definitions.sql
+psql -d your_database -f 02-seed-episode-definitions.sql
 ```
 
-Loads 23+ episodes of care with their associated CPT and ICD-10 codes:
-- Orthopedic (TKA, THA, Spinal Fusion)
-- Cardiac (CABG, PCI, Valve Replacement)
-- Oncology (Mastectomy, Prostatectomy, Colorectal)
-- Bariatric (Gastric Bypass, Sleeve Gastrectomy)
-- And more...
+Loads 8 episodes of care (TKA, THA, Spinal Fusion, CABG, PCI, Bariatric, Colorectal, Mastectomy).
 
-### 3. Create EDI Loader Functions
+### Step 3: Seed Code Mappings
 ```bash
-psql -d clinical_forecasting -f 05-create-edi-loader-functions.sql
+psql -d your_database -f 03-seed-code-mappings.sql
 ```
 
-Creates PostgreSQL functions to parse and load EDI data:
-- `load_270_271_batch()` - Parse 270/271 eligibility data
-- `load_278_batch()` - Parse 278 prior auth data
-- `load_837_batch()` - Parse 837 claims data
-- `classify_episode()` - Auto-classify episodes from codes
+Loads CPT, ICD-10, and NDC code mappings for episode classification. Must run AFTER step 2.
+
+### Step 4: Load Sample Data
+```bash
+psql -d your_database -f 04-load-sample-data.sql
+```
+
+Loads sample member data, clinical intent events, and predictions for testing. This provides realistic data for the dashboard without requiring EDI file parsing.
+
+### Step 5: Load Sample EDI Data (Optional - Advanced)
+```bash
+cd ../edi_loader
+python load_to_supabase.py
+```
+
+Parses sample EDI files and populates tables. Use this for full EDI integration testing.
+
+## Fixed Issues
+
+- ✅ Consolidated conflicting schemas (01-create-tables.sql and 01-create-supabase-schema.sql)
+- ✅ Fixed column name: `inquiry_ts` → `inquiry_date`
+- ✅ Added missing `enrollment_status` column to member table
+- ✅ Fixed GET DIAGNOSTICS syntax: `= ROW_COUNT` → `:= ROW_COUNT`
+- ✅ Removed IMMUTABLE function issues from partial indexes
+- ✅ All functions now reference correct column names
+- ✅ Added episode_code_mapping table for database-driven business rules
 
 ## Schema Design
 
-- **Source Tables**: Raw EDI data (270/271, 278, 837)
+- **Source Tables**: Raw EDI data (270/271, 278, 837, Rx benefit checks)
 - **Canonical Layer**: Unified intent/outcome events
 - **Analytics Layer**: Predictions and risk scores
 - **Reference Tables**: Episodes, codes, members
+- **Rules Engine**: episode_code_mapping for flexible code classification
 
 ## Data Flow
 

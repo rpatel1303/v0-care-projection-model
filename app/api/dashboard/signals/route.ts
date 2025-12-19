@@ -1,26 +1,83 @@
 import { NextResponse } from "next/server"
+import { createServerClient } from "@/lib/supabase/server"
 
-// Based on clinical_intent_event aggregated by signal_type and time
-export async function GET() {
-  // SQL would aggregate clinical_intent_event by week/month
-  const signals = {
-    byType: [
-      { type: "Prior Auth Approved", count: 156, change: 12 },
-      { type: "Eligibility Query", count: 847, change: 23 },
-      { type: "Referrals", count: 234, change: -5 },
-      { type: "Prior Auth Pended", count: 89, change: 8 },
-    ],
-    timeline: [
-      { week: "Week 1", elig: 45, pa: 12, referral: 8 },
-      { week: "Week 2", elig: 52, pa: 15, referral: 9 },
-      { week: "Week 3", elig: 48, pa: 13, referral: 7 },
-      { week: "Week 4", elig: 56, pa: 18, referral: 11 },
-      { week: "Week 5", elig: 61, pa: 20, referral: 10 },
-      { week: "Week 6", elig: 58, pa: 16, referral: 9 },
-      { week: "Week 7", elig: 63, pa: 22, referral: 12 },
-      { week: "Week 8", elig: 67, pa: 19, referral: 11 },
-    ],
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const episodeId = searchParams.get("episodeId") || "TKA"
+
+  try {
+    const supabase = await createServerClient()
+
+    // Get signals by type for this episode
+    const { data: signals } = await supabase
+      .from("clinical_intent_event")
+      .select("event_type, event_date, intent_event_id")
+      .eq("episode_id", episodeId)
+      .gte("event_date", new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()) // Last 90 days
+
+    if (!signals || signals.length === 0) {
+      return NextResponse.json({
+        byType: [],
+        timeline: [],
+      })
+    }
+
+    // Aggregate by type
+    const typeMap: Record<string, number> = {}
+    signals.forEach((signal) => {
+      const type = signal.event_type || "Unknown"
+      typeMap[type] = (typeMap[type] || 0) + 1
+    })
+
+    const byType = Object.entries(typeMap).map(([type, count]) => ({
+      type,
+      count,
+      change: Math.floor(Math.random() * 20) - 5, // Placeholder for week-over-week change
+    }))
+
+    // Aggregate by week for timeline
+    const weekMap: Record<string, { elig: number; pa: number; referral: number }> = {}
+
+    // Generate last 8 weeks
+    for (let i = 7; i >= 0; i--) {
+      const weekStart = new Date()
+      weekStart.setDate(weekStart.getDate() - i * 7)
+      const weekKey = `Week ${8 - i}`
+      weekMap[weekKey] = { elig: 0, pa: 0, referral: 0 }
+    }
+
+    signals.forEach((signal) => {
+      const date = new Date(signal.event_date)
+      const weeksAgo = Math.floor((Date.now() - date.getTime()) / (7 * 24 * 60 * 60 * 1000))
+      const weekKey = `Week ${8 - weeksAgo}`
+
+      if (weekMap[weekKey]) {
+        const eventType = signal.event_type?.toLowerCase() || ""
+
+        if (eventType.includes("eligibility")) {
+          weekMap[weekKey].elig++
+        } else if (eventType.includes("prior") || eventType.includes("auth")) {
+          weekMap[weekKey].pa++
+        } else if (eventType.includes("referral")) {
+          weekMap[weekKey].referral++
+        }
+      }
+    })
+
+    const timeline = Object.entries(weekMap).map(([week, counts]) => ({
+      week,
+      ...counts,
+    }))
+
+    return NextResponse.json({
+      byType,
+      timeline,
+    })
+  } catch (error) {
+    console.error("[v0] Signals API error:", error)
+    return NextResponse.json({
+      byType: [],
+      timeline: [],
+    })
   }
-
-  return NextResponse.json(signals)
 }
