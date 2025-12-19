@@ -10,7 +10,7 @@ This document outlines the complete data schema required to build the Clinical F
 ### 1. Members Table
 Stores patient/member information for the health plan.
 
-```sql
+\`\`\`sql
 CREATE TABLE members (
   member_id VARCHAR(50) PRIMARY KEY,
   first_name VARCHAR(100) NOT NULL,
@@ -39,10 +39,10 @@ CREATE TABLE members (
 CREATE INDEX idx_members_subscriber ON members(subscriber_id);
 CREATE INDEX idx_members_enrollment ON members(enrollment_date);
 CREATE INDEX idx_members_active ON members(is_active);
-```
+\`\`\`
 
 **Sample Data:**
-```json
+\`\`\`json
 {
   "member_id": "M-2024-789456",
   "first_name": "Sarah",
@@ -53,14 +53,14 @@ CREATE INDEX idx_members_active ON members(is_active);
   "enrollment_date": "2023-01-01",
   "is_active": true
 }
-```
+\`\`\`
 
 ---
 
 ### 2. Intent Signals Table
 Captures all pre-claim intent signals from various EDI transactions.
 
-```sql
+\`\`\`sql
 CREATE TABLE intent_signals (
   signal_id VARCHAR(50) PRIMARY KEY,
   member_id VARCHAR(50) NOT NULL REFERENCES members(member_id),
@@ -106,10 +106,10 @@ CREATE INDEX idx_signals_type ON intent_signals(signal_type);
 CREATE INDEX idx_signals_date ON intent_signals(signal_date);
 CREATE INDEX idx_signals_procedure ON intent_signals(procedure_code);
 CREATE INDEX idx_signals_service_date ON intent_signals(requested_service_date);
-```
+\`\`\`
 
 **Sample Data:**
-```json
+\`\`\`json
 {
   "signal_id": "SIG-2024-123456",
   "member_id": "M-2024-789456",
@@ -122,14 +122,14 @@ CREATE INDEX idx_signals_service_date ON intent_signals(requested_service_date);
   "eligibility_status": "ACTIVE",
   "requested_service_date": "2025-01-20"
 }
-```
+\`\`\`
 
 ---
 
 ### 3. Claims Table
 Historical claims data for training models and validation.
 
-```sql
+\`\`\`sql
 CREATE TABLE claims (
   claim_id VARCHAR(50) PRIMARY KEY,
   member_id VARCHAR(50) NOT NULL REFERENCES members(member_id),
@@ -179,10 +179,10 @@ CREATE INDEX idx_claims_service_date ON claims(service_date);
 CREATE INDEX idx_claims_primary_procedure ON claims(primary_procedure_code);
 CREATE INDEX idx_claims_status ON claims(claim_status);
 CREATE INDEX idx_claims_received ON claims(received_date);
-```
+\`\`\`
 
 **Sample Data:**
-```json
+\`\`\`json
 {
   "claim_id": "CLM-2024-987654",
   "member_id": "M-2024-789456",
@@ -196,14 +196,14 @@ CREATE INDEX idx_claims_received ON claims(received_date);
   "paid_amount": 28000.00,
   "received_date": "2025-02-05"
 }
-```
+\`\`\`
 
 ---
 
 ### 4. Predictions Table
 ML model predictions for future procedures.
 
-```sql
+\`\`\`sql
 CREATE TABLE predictions (
   prediction_id VARCHAR(50) PRIMARY KEY,
   member_id VARCHAR(50) NOT NULL REFERENCES members(member_id),
@@ -254,10 +254,10 @@ CREATE INDEX idx_predictions_probability ON predictions(probability_score DESC);
 CREATE INDEX idx_predictions_window ON predictions(predicted_service_window_start, predicted_service_window_end);
 CREATE INDEX idx_predictions_category ON predictions(procedure_category);
 CREATE INDEX idx_predictions_outcome ON predictions(prediction_outcome);
-```
+\`\`\`
 
 **Sample Data:**
-```json
+\`\`\`json
 {
   "prediction_id": "PRED-2024-555123",
   "member_id": "M-2024-789456",
@@ -274,14 +274,14 @@ CREATE INDEX idx_predictions_outcome ON predictions(prediction_outcome);
   "signal_ids": ["SIG-2024-123456", "SIG-2024-123457"],
   "days_since_first_signal": 45
 }
-```
+\`\`\`
 
 ---
 
 ### 5. Procedures Reference Table
 Master table for procedure codes and details.
 
-```sql
+\`\`\`sql
 CREATE TABLE procedures_reference (
   procedure_code VARCHAR(20) PRIMARY KEY,
   procedure_type VARCHAR(10), -- 'CPT', 'HCPCS', 'ICD'
@@ -314,10 +314,10 @@ CREATE TABLE procedures_reference (
 -- Indexes
 CREATE INDEX idx_procedures_category ON procedures_reference(procedure_category);
 CREATE INDEX idx_procedures_active ON procedures_reference(is_active);
-```
+\`\`\`
 
 **Sample Data:**
-```json
+\`\`\`json
 {
   "procedure_code": "27447",
   "procedure_type": "CPT",
@@ -330,14 +330,14 @@ CREATE INDEX idx_procedures_active ON procedures_reference(is_active);
   "is_inpatient": true,
   "is_surgical": true
 }
-```
+\`\`\`
 
 ---
 
 ### 6. Providers Table
 Healthcare provider information.
 
-```sql
+\`\`\`sql
 CREATE TABLE providers (
   provider_id VARCHAR(50) PRIMARY KEY,
   npi VARCHAR(10) UNIQUE NOT NULL,
@@ -382,14 +382,14 @@ CREATE TABLE providers (
 CREATE INDEX idx_providers_npi ON providers(npi);
 CREATE INDEX idx_providers_specialty ON providers(specialty_primary);
 CREATE INDEX idx_providers_network ON providers(network_status);
-```
+\`\`\`
 
 ---
 
 ### 7. Risk Scores Table
 Historical risk scores for members over time.
 
-```sql
+\`\`\`sql
 CREATE TABLE risk_scores (
   risk_score_id VARCHAR(50) PRIMARY KEY,
   member_id VARCHAR(50) NOT NULL REFERENCES members(member_id),
@@ -422,14 +422,14 @@ CREATE INDEX idx_risk_scores_member ON risk_scores(member_id);
 CREATE INDEX idx_risk_scores_date ON risk_scores(score_date);
 CREATE INDEX idx_risk_scores_score ON risk_scores(risk_score DESC);
 CREATE INDEX idx_risk_scores_category ON risk_scores(risk_category);
-```
+\`\`\`
 
 ---
 
 ### 8. Care Management Actions Table
 Track interventions and outreach to high-risk members.
 
-```sql
+\`\`\`sql
 CREATE TABLE care_management_actions (
   action_id VARCHAR(50) PRIMARY KEY,
   member_id VARCHAR(50) NOT NULL REFERENCES members(member_id),
@@ -466,7 +466,7 @@ CREATE INDEX idx_actions_member ON care_management_actions(member_id);
 CREATE INDEX idx_actions_prediction ON care_management_actions(prediction_id);
 CREATE INDEX idx_actions_status ON care_management_actions(status);
 CREATE INDEX idx_actions_date ON care_management_actions(action_date);
-```
+\`\`\`
 
 ---
 
@@ -475,7 +475,7 @@ CREATE INDEX idx_actions_date ON care_management_actions(action_date);
 ### 9. Signal Processing Log
 Tracks the processing of raw EDI transactions.
 
-```sql
+\`\`\`sql
 CREATE TABLE signal_processing_log (
   log_id VARCHAR(50) PRIMARY KEY,
   transaction_id VARCHAR(100) NOT NULL,
@@ -503,14 +503,14 @@ CREATE TABLE signal_processing_log (
 CREATE INDEX idx_processing_transaction ON signal_processing_log(transaction_id);
 CREATE INDEX idx_processing_status ON signal_processing_log(processing_status);
 CREATE INDEX idx_processing_received ON signal_processing_log(received_at);
-```
+\`\`\`
 
 ---
 
 ### 10. Model Performance Metrics
 Track ML model performance over time.
 
-```sql
+\`\`\`sql
 CREATE TABLE model_performance_metrics (
   metric_id VARCHAR(50) PRIMARY KEY,
   model_version VARCHAR(20) NOT NULL,
@@ -548,13 +548,13 @@ CREATE TABLE model_performance_metrics (
 -- Indexes
 CREATE INDEX idx_metrics_model ON model_performance_metrics(model_version);
 CREATE INDEX idx_metrics_date ON model_performance_metrics(evaluation_date);
-```
+\`\`\`
 
 ---
 
 ## Data Relationships
 
-```
+\`\`\`
 members (1) ←→ (M) intent_signals
 members (1) ←→ (M) claims
 members (1) ←→ (M) predictions
@@ -572,14 +572,14 @@ claims (M) ←→ (1) providers (servicing_provider_id)
 intent_signals (M) ←→ (1) procedures_reference (procedure_code)
 claims (M) ←→ (1) procedures_reference (primary_procedure_code)
 predictions (M) ←→ (1) procedures_reference (procedure_code)
-```
+\`\`\`
 
 ---
 
 ## Data Flow
 
 ### 1. Signal Ingestion Pipeline
-```
+\`\`\`
 EDI Transaction (270/271, 278, etc.)
   ↓
 signal_processing_log (received)
@@ -589,10 +589,10 @@ Parse & Validate
 intent_signals (created)
   ↓
 signal_processing_log (completed)
-```
+\`\`\`
 
 ### 2. Prediction Generation Pipeline
-```
+\`\`\`
 Aggregated Intent Signals (by member)
   +
 Historical Claims Data
@@ -608,10 +608,10 @@ predictions (created)
 High Probability Predictions (> 0.75)
   ↓
 care_management_actions (created)
-```
+\`\`\`
 
 ### 3. Outcome Validation Pipeline
-```
+\`\`\`
 New Claim Received
   ↓
 Match to Existing Predictions
@@ -621,7 +621,7 @@ Update prediction.actual_claim_id
 Update prediction.prediction_outcome
   ↓
 model_performance_metrics (aggregated)
-```
+\`\`\`
 
 ---
 
@@ -631,7 +631,7 @@ model_performance_metrics (aggregated)
 Returns all intent signals for a member.
 
 **Response:**
-```json
+\`\`\`json
 {
   "member_id": "M-2024-789456",
   "signals": [
@@ -645,7 +645,7 @@ Returns all intent signals for a member.
   ],
   "total_count": 4
 }
-```
+\`\`\`
 
 ### GET /api/predictions/high-risk
 Returns high-probability predictions for upcoming procedures.
@@ -659,7 +659,7 @@ Returns high-probability predictions for upcoming procedures.
 - `limit`: Results per page
 
 **Response:**
-```json
+\`\`\`json
 {
   "predictions": [
     {
@@ -681,7 +681,7 @@ Returns high-probability predictions for upcoming procedures.
   "page": 1,
   "limit": 20
 }
-```
+\`\`\`
 
 ### GET /api/dashboard/volume-forecast
 Returns procedure volume forecast data.
@@ -691,7 +691,7 @@ Returns procedure volume forecast data.
 - `months`: Number of months to forecast (default: 12)
 
 **Response:**
-```json
+\`\`\`json
 {
   "procedure_category": "TKA",
   "forecast": [
@@ -711,13 +711,13 @@ Returns procedure volume forecast data.
     }
   ]
 }
-```
+\`\`\`
 
 ### GET /api/dashboard/intent-signals-summary
 Returns aggregated intent signal metrics.
 
 **Response:**
-```json
+\`\`\`json
 {
   "period": "last_90_days",
   "signals": [
@@ -739,13 +739,13 @@ Returns aggregated intent signal metrics.
     }
   ]
 }
-```
+\`\`\`
 
 ### POST /api/care-management/actions
 Creates a care management action for a member.
 
 **Request:**
-```json
+\`\`\`json
 {
   "member_id": "M-2024-789456",
   "prediction_id": "PRED-2024-555123",
@@ -756,7 +756,7 @@ Creates a care management action for a member.
   "intervention_type": "Pre-operative education",
   "notes": "Schedule call to discuss surgery prep and recovery"
 }
-```
+\`\`\`
 
 ---
 
@@ -855,7 +855,7 @@ Creates a care management action for a member.
 
 ### Partitioning Strategy
 
-```sql
+\`\`\`sql
 -- Partition large tables by date
 -- intent_signals: partition by signal_date (monthly)
 -- claims: partition by service_date (monthly)
@@ -868,7 +868,7 @@ CREATE TABLE intent_signals (
 
 CREATE TABLE intent_signals_2024_11 PARTITION OF intent_signals
   FOR VALUES FROM ('2024-11-01') TO ('2024-12-01');
-```
+\`\`\`
 
 ### Data Retention Policy
 
@@ -882,7 +882,7 @@ CREATE TABLE intent_signals_2024_11 PARTITION OF intent_signals
 
 ## Environment Variables Required
 
-```env
+\`\`\`env
 # Database
 DATABASE_URL=postgresql://user:password@host:5432/clinical_forecasting
 DATABASE_POOL_SIZE=20
@@ -899,7 +899,7 @@ MODEL_CONFIDENCE_THRESHOLD=0.75
 # Feature Flags
 ENABLE_REAL_TIME_SCORING=true
 ENABLE_CARE_MANAGEMENT_INTEGRATION=true
-```
+\`\`\`
 
 ---
 

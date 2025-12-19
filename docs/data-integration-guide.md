@@ -24,17 +24,17 @@ The system uses 9 core tables organized in layers:
 
 ## Data Pipeline Flow
 
-```
+\`\`\`
 Source Systems → Raw Tables → clinical_intent_event → ML Model → prediction_result → Dashboard
                                       ↓
                               clinical_outcome_event (for training/validation)
-```
+\`\`\`
 
 ## SQL Queries Used by API Endpoints
 
 ### 1. Dashboard Summary (`/api/dashboard/summary`)
 
-```sql
+\`\`\`sql
 -- Predicted Volume
 SELECT 
   COUNT(CASE WHEN predicted_event_date BETWEEN CURRENT_DATE AND CURRENT_DATE + 30 THEN 1 END) as next30Days,
@@ -59,11 +59,11 @@ SELECT
   AVG(CASE WHEN outcome_occurred THEN 1 ELSE 0 END) as accuracy
 FROM prediction_validation_results
 WHERE prediction_date >= CURRENT_DATE - INTERVAL '180 days';
-```
+\`\`\`
 
 ### 2. TKA Volume Forecast (`/api/dashboard/forecast`)
 
-```sql
+\`\`\`sql
 -- Historical Actuals (from claims)
 SELECT 
   DATE_TRUNC('month', event_date) as month,
@@ -86,11 +86,11 @@ WHERE event_type = 'tka'
   AND probability >= 0.65
 GROUP BY month
 ORDER BY month;
-```
+\`\`\`
 
 ### 3. High-Risk Members (`/api/dashboard/members`)
 
-```sql
+\`\`\`sql
 SELECT 
   p.member_id,
   m.date_of_birth,
@@ -131,11 +131,11 @@ WHERE p.event_type = 'tka'
 GROUP BY p.prediction_id, m.member_id
 ORDER BY p.probability DESC
 LIMIT 20;
-```
+\`\`\`
 
 ### 4. Intent Signals Overview (`/api/dashboard/signals`)
 
-```sql
+\`\`\`sql
 -- Signals by Type
 SELECT 
   signal_type,
@@ -160,20 +160,20 @@ WHERE service_category = 'ortho_knee'
   AND intent_ts >= CURRENT_DATE - INTERVAL '60 days'
 GROUP BY week
 ORDER BY week;
-```
+\`\`\`
 
 ## Data Integration Steps
 
 ### Step 1: Load Service Category Mappings
-```bash
+\`\`\`bash
 # Run the service category mapping script first
 psql -h your-db-host -d your-db -f scripts/02-seed-service-category-map.sql
-```
+\`\`\`
 
 ### Step 2: Set Up ETL Pipelines
 
 #### Eligibility Events Pipeline
-```sql
+\`\`\`sql
 -- Example ETL from your EDI gateway to eligibility_inquiry_event
 INSERT INTO eligibility_inquiry_event (
   inquiry_ts, source_channel, payer_id, member_id, provider_npi,
@@ -191,10 +191,10 @@ SELECT
 FROM your_edi_270_271_log
 WHERE transaction_date >= CURRENT_DATE - 1
 GROUP BY 1,2,3,4,5,7,8;
-```
+\`\`\`
 
 #### Prior Auth Pipeline
-```sql
+\`\`\`sql
 -- Example ETL from UM system to prior_auth_request
 INSERT INTO prior_auth_request (
   request_ts, decision_ts, status, member_id, requesting_provider_npi,
@@ -213,21 +213,21 @@ SELECT
   member_plan_id
 FROM your_um_system.pa_cases
 WHERE case_created_date >= CURRENT_DATE - 1;
-```
+\`\`\`
 
 #### Claims Pipeline
-```sql
+\`\`\`sql
 -- Example ETL from claims warehouse
 INSERT INTO claim_header (...)
 SELECT ... FROM your_claims_warehouse.paid_claims;
 
 INSERT INTO claim_line (...)
 SELECT ... FROM your_claims_warehouse.claim_details;
-```
+\`\`\`
 
 ### Step 3: Build clinical_intent_event
 
-```sql
+\`\`\`sql
 -- Populate from eligibility events
 INSERT INTO clinical_intent_event (
   intent_ts, member_id, provider_npi, signal_type, service_category,
@@ -277,11 +277,11 @@ WHERE EXISTS (
     AND m.service_category = 'ortho_knee'
 )
 AND pa.request_ts >= CURRENT_DATE - 90;
-```
+\`\`\`
 
 ### Step 4: Build clinical_outcome_event (Ground Truth)
 
-```sql
+\`\`\`sql
 -- Identify TKA procedures from claims
 INSERT INTO clinical_outcome_event (
   member_id, event_type, event_date, confirming_claim_id,
@@ -304,11 +304,11 @@ JOIN service_category_code_map m
 WHERE cl.service_date >= CURRENT_DATE - 180
   AND ch.claim_status = 'paid'
 GROUP BY ch.member_id, ch.claim_id, ch.rendering_provider_npi;
-```
+\`\`\`
 
 ### Step 5: Run Prediction Model
 
-```python
+\`\`\`python
 # Example model scoring script
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
@@ -348,13 +348,13 @@ for idx, row in features.iterrows():
         'very_high' if predictions[idx] >= 0.85 else 'high',
         'v1.0'
     ))
-```
+\`\`\`
 
 ## Connecting to Dashboard API Routes
 
 Update the API routes in `/app/api/dashboard/*` to connect to your database instead of returning mock data:
 
-```typescript
+\`\`\`typescript
 // Example: app/api/dashboard/summary/route.ts
 import { sql } from '@vercel/postgres' // or your DB client
 
@@ -377,7 +377,7 @@ export async function GET() {
     // ... other fields
   })
 }
-```
+\`\`\`
 
 ## Data Refresh Schedule
 
